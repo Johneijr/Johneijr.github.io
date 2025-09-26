@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Card Results</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #f0f4ff, #c8d7ee);
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 300px);
+      gap: 20px;
+      justify-content: center;
+      margin: 40px auto;
+    }
+    .card {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 300px;
+      color: black;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .card .type {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .card ul {
+      margin: 0 0 16px;
+      padding-left: 20px;
+      font-size: 14px;
+    }
+    .card ul li {
+      margin-bottom: 6px;
+    }
+    .card .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .card .btn {
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .card .btn-primary {
+      background: #003DA5;
+      color: white;
+      border: none;
+    }
+    .card .btn-secondary {
+      background: transparent;
+      color: #003DA5;
+      border: 1px solid #003DA5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">Card MatchR</div>
+    <ul class="nav-links">
+      <li><a href="#">Credit Cards</a></li>
+      <li><a href="#">Student Cards</a></li>
+      <li><a href="#">Secured Cards</a></li>
+      <li><a href="#">About Us</a></li>
+    </ul>
+  </nav>
+
+  <h1>Matching Cards</h1>
+  <div class="cards-grid" id="results"></div>
+
+<script>
+  // Dataset of cards
+  const cards = [
+    {
+      name: "Chase Freedom Unlimited® Credit Card",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "$200 bonus after you spend $500 on purchases in the first 3 months ",
+        "Earn unlimited 1.5% cash back on all purchases",
+        "No Annual Fee",
+        "0% Intro APR for 15 months then 18.99% to 28.49% Standard Variable Purchase APR"
+      ],
+      img: "https://i.imgur.com/3Fwojxt.png",
+      applyLink: "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited?CELL=6TKV"
+    },
+    {
+      name: "Capital One Quicksilver",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "Unlimited 1.5% cash back",
+        "$0 annual fee",
+        "No foreign transaction fees"
+      ],
+      img: "https://i.imgur.com/zPTfUQl.jpeg",
+      applyLink: "https://www.capitalone.com/credit-cards/quicksilver/"
+    },
+    {
+      name: "Discover it<sup>®</sup> Cash Back Credit Card",
+      type: "Credit Card",
+      brand: "Discover",
+      category: "Credit",
+      credit: ["Good", "Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "5% Cashback on everyday purchases",
+        "No annual fee",
+        "Unlimited Cashback Match"
+      ],
+      img: "https://i.imgur.com/vkJ0sMO.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/cash-back/it-card.html"
+    },
+    {
+      name: "Discover it<sup>®</sup> Student Cash Back Credit Card",
+      type: "Credit Card",
+      brand: "Discover",
+      category: "Student",
+      credit: ["No Credit","Poor", "Fair","Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "5% Cashback on everyday purchases",
+        "No annual fee",
+        "Unlimited Cashback Match"
+      ],
+      img: "https://i.imgur.com/74d7H3o.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/student-credit-card/it-card.html"
+    },
+    {
+      name: "Discover it<sup>®</sup> Secured Credit Card",
+      type: "Secured Credit Card",
+      brand: "Discover",
+      category: "Secured",
+      credit: ["No Credit","Poor", "Fair","Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "Unlimited Cashback Match",
+        "No annual fee",
+        "Minimum $200 Deposit"
+      ],
+      img: "https://i.imgur.com/uWDQbxN.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/secured-credit-card/"
+    },
+    
+    {
+      name: "Discover it<sup>®</sup> Student Chrome Credit Card",
+      type: "Student Credit Card",
+      brand: "Discover",
+      category: "Student",
+      credit: ["No Credit","Poor", "Fair","Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "Unlimited Cashback Match",
+        "No annual fee",
+        "2% Cashback Bonus® at Resturants & Gas Stations ",
+        "1% Cash Back on Everything Else"
+      ],
+      img: "https://i.imgur.com/CtH6HUa.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/student-credit-card/chrome-card.html?ICMPGN=ALL_CC_STUDENT_CHROME_CARD"
+    },
+     {
+      name: "Discover it<sup>®</sup> Miles Credit Card",
+      type: "Credit Card",
+      brand: "Discover",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        "Unlimited Discover Match® for your fisrt year",
+        "No annual fee",
+        "Earn 1.5x Miles on every dollar of every purchase",
+        "0% Intro APR for 15 months then 18.24% to 27.24% Standard Variable Purchase APR."
+      ],
+      img: "https://i.imgur.com/jLRWD0Z.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/travel/?ICMPGN=ALL_CC_TRAVEL_CARD"
+    },
+    {
+      name: "Discover it<sup>®</sup> Chrome Gas & Restaurant Credit Card",
+      type: "Credit Card",
+      brand: "Discover",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "2% Cashback Bonus® at Gas Stations and Restaurants",
+        "Unlimited 1% cash back on all other purchases",
+        "No annual fee",
+        "0% Intro APR for 15 months, then 18.24% to 27.24% Standard Variable Purchase APR."
+      ],
+      img: "https://i.imgur.com/IuCOhVR.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/cash-back/chrome.html?ICMPGN=ALL_CC_GAS_AND_RESTAURANT_CARD"
+    },
+    {
+      name: "NHL<sup>®</sup> Discover it<sup>®</sup> Credit Card",
+      type: "Credit Card",
+      brand: "Discover",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "5% cash back on everyday purchases at different places you shop each quarter",
+        "1% cash back on all other purchases",
+        "No annual fee",
+        "0% Intro APR for 15 months, then 18.24% to 27.24% Standard Variable Purchase APR."
+      ],
+      img: "https://i.imgur.com/Y0Vwsae.jpeg",
+      applyLink: "https://www.discover.com/credit-cards/cash-back/nhl-card.html?ICMPGN=ALL_CC_NHL_CARD"
+    },
+    {
+      name: "The New Chase Sapphire Reserve<sup>®</sup> Credit Card",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Very Good", "Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        "8x points on Chase Travel purchases and 4x points on flights and hotels booked direct",
+        "Earn 125,000 points after you spend $6,000 in purchases in the first 3 months from account opening",
+        "$795 annual fee + $125 per authorized user",
+        "20.24% – 28.74% variable APR."
+      ],
+      img: "https://i.imgur.com/NiEYjtR.jpeg",
+      applyLink: "https://creditcards.chase.com/rewards-credit-cards/sapphire/reserve?CELL=6TKV"
+    },
+    {
+      name: "Chase Sapphire Preferred<sup>®</sup> Credit Card",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        "5x points on Chase Travel purchases and 3x points on dining at restaurants",
+        "Earn 75,000 bonus points after you spend $5,000 on purchases in the first 3 months from account opening",
+        "$95 annual fee",
+        "19.99% – 28.24% variable APR."
+      ],
+      img: "https://i.imgur.com/9JdAIpz.jpeg",
+      applyLink: "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred?CELL=6TKV"
+    },
+    {
+      name: "Chase Freedom Flex<sup>®</sup> Credit Card",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good", "Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "$200 bonus after you spend $500 on purchases in the first 3 months",
+        "5% cash back on up to $1,500 on combined purchases in bonus categories each quarter you activate",
+        "$0 annual fee",
+        "0% intro APR for first 15 months then 18.99% – 28.24% variable APR."
+      ],
+      img: "https://i.imgur.com/pIpKCFi.jpeg",
+      applyLink: "https://creditcards.chase.com/cash-back-credit-cards/freedom/flex?CELL=6TKV"
+    },
+    {
+      name: "Chase Freedom Rise<sup>®</sup> Credit Card",
+      type: "Credit Card & Student Credit Card",
+      brand: "Chase",
+      category: ["Credit","Student"],
+      credit: ["No Credit","Poor", "Fair","Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "1.5% cash back on all purchases",
+        "$0 annual fee",
+        "25.99% variable APR."
+      ],
+      img: "https://i.imgur.com/U3ern23.jpeg",
+      applyLink: "https://creditcards.chase.com/cash-back-credit-cards/freedom/rise?CELL=6TKV"
+    },
+    {
+      name: "Slate Edge<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        "0% intro APR for first 18 months on purchases and balance transfers then 18.99%–28.99% variable APR",
+        "$0 annual fee",
+        "Lower your interest rate by 2% each year"
+      ],
+      img: "https://i.imgur.com/OXBjZh3.jpeg",
+      applyLink: "https://creditcards.chase.com/balance-transfer-credit-cards/slate/edge?CELL=6TKV"
+    },
+    {
+      name: "The New United<sup>SM</sup> Explorer Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Miles","Travel"],
+      perks: [
+        "20.49%–28.99% variable APR",
+        "$0 annual fee for the first year, then $150",
+        "60,000 bonus miles after qualifying purchases",
+        "Free first checked bag, 2 United ClubSM one-time passes per year, priority boarding and over $500 in new annual partner credits"
+      ],
+      img: "https://i.imgur.com/X6jxlRs.jpeg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/united/united-explorer?CELL=6TKV"
+    },
+    {
+      name: "The New United Quest<sup>SM</sup> Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles","Travel","Points"],
+      perks: [
+        "Earn 70,000 bonus miles + 1,000 Premier qualifying points",
+        "$200 United travel credit, annual 10,000-mile award flight discount, 2 free checked bags, and priority boarding",
+        "20.49%–28.99% variable APR",
+        "$350 annual fee"
+      ],
+      img: "https://i.imgur.com/yzzgXBd.jpeg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/united/united-quest?CELL=6TKV"
+    },
+    {
+      name: "The New United Gateway<sup>SM</sup> Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Miles","Travel"],
+      perks: [
+        "Earn 30,000 bonus miles after qualifying purchases",
+        "Earn 2 checked bags each year, receive 25% back on United inflight and Club premium drink purchases, and earn unlimited miles with no annual fee",
+        "0% intro APR for first 12 months, then 20.49%–28.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://i.imgur.com/9E1syjW.jpeg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/united/united-gateway?CELL=6TKV"
+    },
+    {
+      name: "The New United Club<sup>SM</sup> Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles","Travel"],
+      perks: [
+        "Earn 80,000 bonus miles after qualifying purchases",
+        "United ClubSM card membership, earn 4 United ClubSM one-time passes, 2 free checked bags, Premier Access travel services, and over $875 in new annual partner credits",
+        "20.49%–28.99%  variable APR",
+        "$695 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled62_20250923123828.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/united/united-gateway?CELL=6TKV"
+    },
+    {
+      name: "Southwest Rapid Rewards<sup>®</sup> Plus Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 50,000 bonus points after you spend $1,000 in the first 3 months from account opening",
+        "First checked bag free and 3,000 anniversary points each year. Plus, earn 2X points on Southwest Airline<sup>®</sup> purchases",
+        "19.99%–28.49% variable APR",
+        "$99 applied to first billing statement"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled63_20250923134037.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/southwest/plus?CELL=6TKV"
+    },
+    {
+      name: "Southwest Rapid Rewards<sup>®</sup> Priority Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 50,000 bonus points after you spend $1,000 in the first 3 months from account opening",
+        "First checked bag free. 7,500 anniversary points each year. Plus, earn 4X points on Southwest Airline<sup>®</sup> purchases and 2X points at gas stations and restaurants",
+        "19.99%–28.49% variable APR",
+        "$229 applied to first billing statement"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled64_20250923135216.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/southwest/priority?CELL=6TKV"
+    },
+    {
+      name: "Southwest Rapid Rewards<sup>®</sup> Premier Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 50,000 bonus points after you spend $1,000 in the first 3 months from account opening",
+        "First checked bag free. 6,000 anniversary points each year. Plus, earn 3X points on Southwest Airline<sup>®</sup> purchases",
+        "19.99%–28.49% variable APR",
+        "$149 applied to first billing statement"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled64_20250923135841.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/southwest/premier?CELL=6TKV"
+    },
+    {
+      name: "Marriott Bonvoy Boundless<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 3 Free Night Awards after spending $3,000 on eligible purchases within 3 months of account opening",
+        "Earn up to 17X total points per $1 spent at hotels participating in Marriott Bonvoy<sup>®</sup>",
+        "19.99%–28.49% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled65_20250923170733.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/marriott-bonvoy/boundless?CELL=6TKV"
+    },
+    {
+      name: "Marriott Bonvoy Bountiful<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 85,000 Bonus Points after you spend $4,000 in purchases in your first 3 months from your account opening",
+        "Earn Unlimited Marriott Bonvoy<sup>®</sup> points and get free stays faster. Earn points on every purchase and up to 18.5X total points per $1 spent at hotels participating in Marriott Bonvoy<sup>®</sup>",
+        "19.99%–28.49% variable APR",
+        "$250 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled70_20250923171631.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/marriott-bonvoy/bountiful?CELL=6TKV"
+    },
+    {
+      name: "Marriott Bonvoy Bold<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 30,000 Bonus Points after spending $1,000 on eligible purchases within the first 3 months from account opening",
+        "Earn up to 14X total points per $1 spent at hotels participating in Marriott Bonvoy<sup>®</sup>",
+        "19.99%–28.49% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled70_20250923172639.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/marriott-bonvoy/bold?CELL=6TKV"
+    },
+    {
+      name: "IHG One Rewards Premier Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 165,000 Bonus Points after you spend $3,000 on purchases in the first three months from account opening",
+        "Earn IHG One Rewards points on every purchase. Up to 26X points total per $1 spent when you stay at IHG<sup>®</sup> Hotels and Resorts",
+        "19.99%–28.49% variable APR",
+        "$99 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled69_20250924095544.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/premier?CELL=6TKV"
+    },
+    {
+      name: "IHG One Rewards Traveler Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn 2 free nights + 40,000 Bonus Points after you spend $2,000 on purchases in the first 3 months from account opening",
+        "Earn IHG One Rewards points on every purchase. Up to 17X points total per $1 spent when you stay at IHG<sup>®</sup> Hotels and Resorts",
+        "19.99%–28.49% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled72_20250924100858.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/traveler?CELL=6TKV"
+    },
+    {
+      name: "Disney<sup>®</sup> Premier Visa<sup>®</sup> Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Other","Travel"],
+      perks: [
+        "$300 Statement Credit after you spend $1,000 on purchases in the first 3 months from account opening",
+        "Earn 5% in Disney Rewards Dollars on card purchases made directly at DisneyPlus.com, Hulu.com or ESPNPlus.com. Earn 2% on select card purchases and 1% on all other card purchases",
+        "18.24%–27.24% variable APR. 0% promotional APR for 6 months on select Disney vacation packages from the date of purchase, after that a variable APR of 18.24%–27.24%",
+        "$49 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled73_20250924135518.jpg",
+      applyLink: "https://creditcards.chase.com/rewards-credit-cards/disney/premier?CELL=6TKV"
+    },
+    {
+      name: "Disney<sup>®</sup> Visa<sup>®</sup> Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other","Travel"],
+      perks: [
+        "$150 Statement Credit after you spend $500 on purchases in the first 3 months from account opening",
+        "Earn 1% in Disney Rewards Dollars on all your card purchases. Redeem toward most anything Disney at most Disney U.S. locations",
+        "18.24%–27.24% variable APR. 0% promotional APR for 6 months on select Disney vacation packages from the date of purchase, after that a variable APR of 18.24%–27.24%",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled74_20250924140701.jpg",
+      applyLink: "https://creditcards.chase.com/rewards-credit-cards/disney/rewards?CELL=6TKV"
+    },
+    {
+      name: "World of Hyatt Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points","Travel"],
+      perks: [
+        "Earn up to 60,000 Bonus Points after qualifying purchases",
+        "Turn purchases into free nights by earning up to 9X total points per $1 at Hyatt hotels and resorts. Plus, get 1 free night and 5 tier qualifying nights credits toward status each year just for being a cardmember",
+        "19.99%–28.49% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled75_20250924141644.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/world-of-hyatt-credit-card?CELL=6TKV"
+    },
+    {
+      name: "British Airways Visa Signature<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Other","Travel"],
+      perks: [
+        "Earn 85,000 Avios after you spend $5,000 on purchases within the first 3 months of account opening",
+        "In addition to the bonus, cardmembers earn 3 Avios for every $1 spent on British Airways, Aer Lingus, and Iberia flight purchases, and 2 Avios for every $1 spent on hotel accommodations. Earn 1 Avios for every $1 spent on all other purchases. Terms apply",
+        "19.99%–28.49% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled77_20250924163847.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/avios/british-airways?CELL=6TKV"
+    },
+    {
+      name: "Aer Lingus Visa Signature<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Other","Travel"],
+      perks: [
+        "Earn 85,000 Avios after you spend $5,000 on purchases within the first 3 months of account opening",
+        "In addition to the bonus, cardmembers earn 3 Avios for every $1 spent on Aer Lingus, British Airways, and Iberia flight purchases, and 2 Avios for every $1 spent on hotel accommodations. Earn 1 Avios for every $1 spent on all other purchases. Terms apply",
+        "19.99%–28.49% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled78_20250924164620.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/avios/aer-lingus?CELL=6TKV"
+    },
+    {
+      name: "Iberia Visa Signature<sup>®</sup> Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Other","Travel", "Other"],
+      perks: [
+        "Earn 85,000 Avios after you spend $5,000 on purchases within the first 3 months of account opening",
+        "In addition to the bonus, cardmembers earn 3 Avios for every $1 spent on Iberia, British Airways, and Aer Lingus flight purchases, and 2 Avios for every $1 spent on hotel accommodations. Earn 1 Avios for every $1 spent on all other purchases. Terms apply",
+        "19.99%–28.49% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled79_20250924195219.jpg",
+      applyLink: "https://creditcards.chase.com/travel-credit-cards/avios/iberia?CELL=6TKV"
+    },
+    {
+      name: "Amazon Visa Credit Card Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback","Travel", "Other"],
+      perks: [
+        "Get a $50 Amazon Gift Card instantly loaded into your Amazon account's Gift Card Balance upon approval of your credit card application",
+        "Earn unlimited 3% back at Amazon.com, Amazon Fresh, Whole Foods Market, and on Chase Travel purchases, unlimited 2% back at gas stations, restaurants, and on local transit and commuting (including rideshare), and unlimited 1% back on all other purchases",
+        "19.49%–28.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled75_20250924200824.jpg",
+      applyLink: "https://creditcards.chase.com/cash-back-credit-cards/amazon-rewards?CELL=6TKV"
+    },
+    {
+      name: "DoorDash Rewards Mastercard<sup>®</sup> Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback", "Other"],
+      perks: [
+        "Approved applicants receive a free year of DashPass that will auto-renew at $96/yr. Cancel anytime",
+        "Earn 4% cash back on DoorDash and Caviar orders, 3% cash back on dining when purchased directly from a restaurant, 2% cash back on grocery stores online or in-store and 1% on all other purchases",
+        "18.99%–28.49%  variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled81_20250924201944.jpg",
+      applyLink: "https://creditcards.chase.com/cash-back-credit-cards/doordash?CELL=6TKV"
+    },
+    {
+      name: "Instacart Mastercard<sup>®</sup> Chase",
+      type: "Credit Card",
+      brand: "Chase",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback", "Other"],
+      perks: [
+        "Get a $50 Instacart credit automatically upon approval",
+        "Earn 5% cash back on qualifying Instacart purchases on your first $6,000 spent annually, 5% cash back on Chase Travel purchases, and 2% cash back at restaurants, gas stations, and on select streaming services",
+        "18.99%–28.49% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled83_20250924202509.jpg",
+      applyLink: "https://creditcards.chase.com/cash-back-credit-cards/instacart?CELL=6TKV"
+    },
+    {
+      name: "Platinum Card<sup>®</sup> American Express",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Cashback", "Points", "Travel"],
+      perks: [
+        "5X points on prepaid hotel bookings and flights booked directly with airlines through Amex Travel, points cap applies",
+        "Use your Card and get up to $300 back semi-annually on select prepaid hotel bookings through Amex Travel<sup>™</sup>",
+        "19.99% to 28.99% variable APR",
+        "$895 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled84_20250925141707.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/platinum/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-Platinum-Prospect-Viewdetails-CardTile"
+    },
+    {
+      name: "American Express<sup>®</sup> Gold Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        "4X points at restaurants worldwide, on up to $50K in purchases",
+        "3X points on flights booked directly with airlines",
+        "19.99% to 28.99% variable APR",
+        "$325 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled85_20250925143458.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/gold-card/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-GoldCard-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Blue Cash Preferred<sup>®</sup> Card American Express",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Cashback", "Travel"],
+      perks: [
+        "Earn $300 Back after you spend $3,000 in purchases on your new Card in your first 6 months of Card Membership",
+        "3% cash back on transit purchases",
+        "0% intro APR on purchases and balance transfers for 12 months from the date of account opening, then a variable APR, 19.99% to 28.99%",
+        "$0 intro annual fee for the first year, then $95"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled68_20250925145328.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/blue-cash-preferred/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-BCP-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Blue Cash Preferred<sup>®</sup> Card American Express",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Cashback", "Travel"],
+      perks: [
+        "Earn $300 Back after you spend $3,000 in purchases on your new Card in your first 6 months of Card Membership",
+        "3% cash back on transit purchases",
+        "0% intro APR on purchases and balance transfers for 12 months from the date of account opening, then a variable APR, 19.99% to 28.99%",
+        "$0 intro annual fee for the first year, then $95"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled68_20250925145328.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/blue-cash-preferred/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-BCP-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Blue Cash Everyday<sup>®</sup> Card American Express",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        "Earn $200 Backafter you spend $2,000 in purchases on your new Card within the first 6 months of Card Membership",
+        "3% cash back at U.S. supermarkets on up to $6K in purchases (then 1%)",
+        "0% intro APR on purchases and balance transfers for 15 months from the date of account opening, then a variable APR, 19.99% to 28.99%",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled84_20250925154406.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/blue-cash-everyday/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-BCE-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Delta SkyMiles<sup>®</sup> Gold American Express Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        "Earn 80,000 Bonus Milesafter you spend $3,000 in purchases on your new Card in your first 6 months of Card Membership. Offer ends 10/29/25",
+        "2X Miles on Delta Purchases, at restaurants and at U.S. supermarkets",
+        "19.99% to 28.99% variable APR",
+        "$0 introductory annual fee for the first year, then $150"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled87_20250925154928.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-gold-american-express-card/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-DeltaGold-Prospect-Viewdetails-CardTile"
+    },
+    {
+      name: "Delta SkyMiles<sup>®</sup> Platinum American Express Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        "Earn 90,000 Bonus Milesafter you spend $4,000 in purchases on your new Card in your first 6 months of Card Membership. Offer ends 10/29/25",
+        "First checked bag free‡ + Zone 5 Priority Boarding",
+        "19.99% to 28.99% variable APR",
+        "$350 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled88_20250925155621.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-platinum-american-express-card/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-DeltaPlatinum-Prospect-Viewdetails-CardTile"
+    },
+    {
+      name: "Marriott Bonvoy Bevy<sup>®</sup> American Express<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 85,000 Marriott Bonvoy<sup>®</sup> bonus pointsafter you use your new Card to make $5,000 in purchases within the first 6 months of Card Membership",
+        "6X points at hotels participating in Marriott Bonvoy<sup>®</sup>",
+        "19.99% to 28.99% variable APR",
+        "$250 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled71_20250925160351.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/marriott-bonvoy-bevy/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-MarriottBonvoyBevy-Prospect-Viewdetails-CardTile"
+    },
+    {
+      name: "Marriott Bonvoy Brilliant<sup>®</sup> American Express<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 100,000 Marriott Bonvoy® bonus pointsafter you use your new Card to make $6,000 in purchases within the first 6 months of Card Membership",
+        "6X points at hotels participating in Marriott Bonvoy<sup>®</sup>",
+        "19.99% to 28.99% variable APR",
+        "$650 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled91_20250925160655.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/marriott-bonvoy-brilliant/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-MarriottBonvoyBrilliant-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Hilton Honors American Express Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 95,000 Hilton Honors Bonus Points after you spend $2,000 in purchases on the Card within your first 6 months of Card Membership",
+        "Earn 7X Hilton Honors Bonus Points on eligible Hilton purchases",
+        "19.99% to 28.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled89.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/hilton-honors/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-HiltonHonors-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Hilton Honors American Express Surpass<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 130,000 150,000 Hilton Honors Bonus Pointsafter you spend $3,000 in purchases on the Card within your first 6 months of Card Membership",
+        "Earn 12X Hilton Honors Bonus Points on eligible Hilton purchases",
+        "19.99% to 28.99% variable APR",
+        "$150 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled93_20250925161312.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/hilton-honors-surpass/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-HiltonSurpass-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Delta SkyMiles<sup>®</sup> Reserve American Express Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "Earn 125,000 Bonus Milesafter you spend $6,000 in purchases on your new Card in your first 6 months of Card Membership. Offer ends 10/29/25",
+        "Delta Sky Club<sup>®</sup> Access",
+        "19.99% to 28.99% variable APR",
+        "$650 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled94_20250925161924.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-reserve-american-express-card/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-DeltaReserve-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "American Express Green Card<sup>®</sup>",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 130,000 150,000 Hilton Honors Bonus Points after you spend $3,000 in purchases on the Card within your first 6 months of Card Membership",
+        "Earn 12X Hilton Honors Bonus Points on eligible Hilton purchases",
+        "19.99% to 28.99% variable APR",
+        "$150 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled90_20250925162558.jpg",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/green/?eep=25330&intlink=US-Axp-Shop-Consumer-PDP-HiltonSurpass-Prospect-Green-FilmStrip"
+    },
+    {
+      name: "Hilton Honors American Express Aspire Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 150,000 Hilton Honors Bonus Points with the Hilton Honors American Express Aspire Card after you spend $6,000 in purchases on the Card within your first 6 months of Card Membership",
+        "Earn 14X Hilton Honors Bonus Points on eligible Hilton purchases",
+        "19.99% to 28.99% variable APR",
+        "$550 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled93_20250925184955.png",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/hilton-honors-aspire/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-HiltonAspire-Prospect-Cardname-CardTile"
+    },
+    {
+      name: "Delta SkyMiles<sup>®</sup> Blue American Express Card",
+      type: "Credit Card",
+      brand: "American Express",
+      category: "Credit",
+      credit: ["Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "Earn 10,000 Bonus Milesafter spending $1,000 in purchases on your new Card in your first 6 months of Card Membership",
+        "2X Miles at Restaurants and on Delta Purchases",
+        "19.99% to 28.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled96_20250925190738.png",
+      applyLink: "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-blue-american-express-card/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-DeltaBlue-Prospect-Cardname-CardTile"
+    },
+  ];
+
+  // Get filters from URL
+  const params = new URLSearchParams(window.location.search);
+  const filters = {
+    brand: (params.get("filter1") || "").split(","),
+    category: (params.get("filter2") || "").split(","),
+    credit: (params.get("filter3") || "").split(","),
+    fees: (params.get("filter4") || "").split(","),
+    rewards: (params.get("filter5") || "").split(",")
+  };
+
+  // Filter logic
+  const results = cards.filter(card => {
+    const brandMatch = filters.brand.includes("All") || filters.brand.includes(card.brand);
+    const categoryMatch = filters.category.includes("All") || 
+  (Array.isArray(card.category)
+    ? card.category.some(c => filters.category.includes(c))
+    : filters.category.includes(card.category));
+
+    const creditMatch = filters.credit.includes("All") || card.credit.some(c => filters.credit.includes(c));
+    const feeMatch = filters.fees.includes("All") || filters.fees.includes(card.fees);
+    const rewardMatch = filters.rewards.includes("All") || card.rewards.some(r => filters.rewards.includes(r));
+    return brandMatch && categoryMatch && creditMatch && feeMatch && rewardMatch;
+  });
+
+  // Render results
+  const resultsDiv = document.getElementById("results");
+  if (results.length > 0) {
+    results.forEach(card => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <img src="${card.img}" alt="${card.name}">
+        <h3>${card.name}</h3>
+        <div class="type">${card.type}</div>
+        <ul>${card.perks.map(p => `<li>${p}</li>`).join("")}</ul>
+        <div class="actions">
+          <a href="${card.applyLink}" target="_blank" class="btn btn-primary">View Details</a>
+        </div>
+      `;
+      resultsDiv.appendChild(div);
+    });
+  } else {
+    resultsDiv.innerHTML = "<p>No cards match your filters.</p>";
+  }
+</script>
+
+</body>
+</html>
+
+
+

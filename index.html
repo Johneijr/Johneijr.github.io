@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Card MatchR</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .filter-dropdown {
+      position: relative;
+      display: inline-block;
+      margin: 0 8px;
+    }
+
+    .dropdown-btn {
+      padding: 12px 18px;
+      border: 2px solid #000000;
+      border-radius: 6px;
+      background: rgb(238, 238, 238);
+      cursor: pointer;
+      font-size: 16px;
+      min-width: 140px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background: #fff;
+      min-width: 180px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      padding: 10px;
+      z-index: 100;
+    }
+
+    .dropdown-content label {
+      display: block;
+      margin: 6px 4px;
+      font-size: 16px;
+      color: black;
+    }
+
+    .filter-dropdown.show .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">Card MatchR</div>
+    <ul class="nav-links">
+      <li><a href="#">Credit Cards</a></li>
+      <li><a href="#">Student Cards</a></li>
+      <li><a href="#">Secured Cards</a></li>
+      <li><a href="#">About Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="filter-box">
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-dropdown">
+          <button type="button" class="dropdown-btn">Brand</button>
+          <div class="dropdown-content">
+            <label><input type="checkbox" value="All" checked> All</label>
+            <label><input type="checkbox" value="Chase"> Chase</label>
+            <label><input type="checkbox" value="Capital One"> Capital One</label>
+            <label><input type="checkbox" value="Discover"> Discover</label>
+            <label><input type="checkbox" value="American Express"> American Express</label>
+          </div>
+        </div>
+
+        <div class="filter-dropdown">
+          <button type="button" class="dropdown-btn">Card Type</button>
+          <div class="dropdown-content">
+            <label><input type="checkbox" value="All" checked> All</label>
+            <label><input type="checkbox" value="Credit"> Credit Card</label>
+            <label><input type="checkbox" value="Student"> Student Card</label>
+            <label><input type="checkbox" value="Secured"> Secured Card</label>
+          </div>
+        </div>
+
+        <div class="filter-dropdown">
+          <button type="button" class="dropdown-btn">Credit Level</button>
+          <div class="dropdown-content">
+            <label><input type="checkbox" value="All" checked> All</label>
+            <label><input type="checkbox" value="Excellent"> Excellent</label>
+             <label><input type="checkbox" value="Very Good"> Very Good</label>
+            <label><input type="checkbox" value="Good"> Good</label>
+            <label><input type="checkbox" value="Fair"> Fair</label>
+            <label><input type="checkbox" value="Poor"> Poor</label>
+            <label><input type="checkbox" value="No Credit"> No Credit</label>
+          </div>
+        </div>
+
+        <div class="filter-dropdown">
+          <button type="button" class="dropdown-btn">Annual Fee</button>
+          <div class="dropdown-content">
+            <label><input type="checkbox" value="All" checked> All</label>
+            <label><input type="checkbox" value="No Annual Fee"> No Annual Fee</label>
+            <label><input type="checkbox" value="Annual Fee"> Has Annual Fee</label>
+          </div>
+        </div>
+
+        <div class="filter-dropdown">
+          <button type="button" class="dropdown-btn">Rewards</button>
+          <div class="dropdown-content">
+            <label><input type="checkbox" value="All" checked> All</label>
+            <label><input type="checkbox" value="Cashback"> Cashback</label>
+            <label><input type="checkbox" value="Travel"> Travel</label>
+            <label><input type="checkbox" value="Points"> Points</label>
+            <label><input type="checkbox" value="Miles"> Miles</label>
+            <label><input type="checkbox" value="Other"> Other/None</label> 
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Button -->
+      <button class="search-btn" id="findBtn">Find Me Cards →</button>
+
+    </div>
+  </section>
+
+<script>
+  // Toggle dropdowns
+  document.querySelectorAll(".dropdown-btn").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation(); // prevent closing when clicking button
+      const parent = this.parentElement;
+      parent.classList.toggle("show");
+      document.querySelectorAll(".filter-dropdown").forEach(d => {
+        if (d !== parent) d.classList.remove("show");
+      });
+    });
+  });
+
+  // Close dropdowns if clicking outside the filter
+  window.addEventListener("click", function(e) {
+    if (!e.target.closest(".filter-dropdown")) {
+      document.querySelectorAll(".filter-dropdown").forEach(d => d.classList.remove("show"));
+    }
+  });
+
+  // Update button labels dynamically
+  document.querySelectorAll(".filter-dropdown").forEach(dropdown => {
+    const btn = dropdown.querySelector(".dropdown-btn");
+    const checkboxes = dropdown.querySelectorAll("input[type='checkbox']");
+
+    function updateLabel() {
+      const selected = Array.from(checkboxes).filter(cb => cb.checked && cb.value !== "All");
+      if (checkboxes[0].checked) {
+        btn.textContent = btn.textContent.split(" (")[0]; // reset to base label
+      } else if (selected.length > 0) {
+        btn.textContent = `${btn.textContent.split(" (")[0]} (${selected.length} selected)`;
+      } else {
+        btn.textContent = btn.textContent.split(" (")[0];
+      }
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        // "All" resets others
+        if (cb.value === "All" && cb.checked) {
+          checkboxes.forEach(other => { if (other.value !== "All") other.checked = false; });
+        } else if (cb.value !== "All" && cb.checked) {
+          checkboxes[0].checked = false; // uncheck "All"
+        }
+        updateLabel();
+      });
+    });
+
+    updateLabel(); // initialize
+  });
+
+  // Gather filters and redirect
+  document.getElementById("findBtn").addEventListener("click", () => {
+    const filters = {};
+    document.querySelectorAll(".filter-dropdown").forEach((dropdown, i) => {
+      const selected = Array.from(dropdown.querySelectorAll("input:checked")).map(cb => cb.value);
+      filters[`filter${i+1}`] = selected.join(",");
+    });
+
+    const params = new URLSearchParams(filters);
+    window.location.href = `results.html?${params.toString()}`;
+  });
+</script>
+
+</body>
+</html>
+
+
+
+
+
