@@ -98,50 +98,7 @@ body {
 .search-btn:hover {
   background: #ddd;
 }
-/* Mobile Styles */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    padding: 10px 20px;
-  }
 
-  .navbar .nav-links {
-    flex-direction: column;
-    gap: 10px;
-  }
 
-  .hero {
-    height: auto;
-    padding: 20px;
-  }
-
-  .filters {
-    flex-direction: column;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .filter-box {
-    width: 100%;
-    padding: 20px;
-  }
-
-  /* Results page grid */
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-
-  .card {
-    width: 90%;
-    margin: 0 auto;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1200px) {
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
 
