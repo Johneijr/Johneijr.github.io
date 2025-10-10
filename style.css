@@ -8,7 +8,7 @@
 /* Body + Background */
 body {
   font-family: Arial, sans-serif;
-  background: url("https://cdn.pixabay.com/photo/2016/07/15/21/07/credit-card-1520400_1280.jpg") no-repeat center center/cover;
+  background: url("https://github.com/Johneijr/Card-Images/blob/main/Untitled38_20250929113227.jpg?raw=true") no-repeat center center/cover;
   height: 100vh;
   color: #fff;
 }
@@ -97,6 +97,148 @@ body {
 
 .search-btn:hover {
   background: #ddd;
+}
+/* ------------------------------ */
+/*   RESPONSIVE DESIGN UPGRADES   */
+/* ------------------------------ */
+
+/* Ensure the layout scales properly on all screens */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Navbar adjustments */
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 25px;
+  }
+
+  .navbar .logo {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .nav-links li a {
+    width: 100%;
+    display: block;
+    text-align: left;
+    background: #eee;
+  }
+}
+
+/* Filter box */
+@media (max-width: 768px) {
+  .filter-box {
+    width: 90%;
+    padding: 25px 20px;
+    gap: 15px;
+  }
+
+  .filters {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filters select {
+    width: 100%;
+  }
+
+  .search-btn {
+    width: 100%;
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+
+/* Card grid + layout */
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    margin: 15px 0;
+  }
+
+  .card img {
+    border-radius: 10px;
+  }
+
+  .not-actual-overlay {
+    font-size: 8px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+    text-align: center;
+  }
+}
+
+/* About page and other large containers */
+@media (max-width: 768px) {
+  .about-container {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .about-container h1 {
+    font-size: 26px;
+  }
+
+  .about-container p {
+    font-size: 15px;
+  }
+
+  .mission {
+    padding: 15px;
+  }
+}
+
+/* For very small phones (under 480px wide) */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .navbar .logo {
+    font-size: 18px;
+  }
+
+  .nav-links li a {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .search-btn {
+    font-size: 15px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .card ul li {
+    font-size: 14px;
+  }
+
+  footer.disclaimer {
+    font-size: 12px;
+    padding: 15px;
+  }
 }
 
 
