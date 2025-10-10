@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <title>Card MatchR</title>
   <link rel="stylesheet" href="style.css">
@@ -43,18 +44,29 @@
     .filter-dropdown.show .dropdown-content {
       display: block;
     }
+    .logo a {
+  color: white;             /* same as before */
+  text-decoration: none;    /* removes underline */
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo a:hover {
+  opacity: 0.85;            /* subtle hover effect */
+}
+
   </style>
 </head>
 <body>
 
   <!-- Navigation Bar -->
   <nav class="navbar">
-    <div class="logo">Card MatchR</div>
+    <div class="logo">
+  <a href="index.html">Card MatchR</a>
+</div>
+
     <ul class="nav-links">
-      <li><a href="#">Credit Cards</a></li>
-      <li><a href="#">Student Cards</a></li>
-      <li><a href="#">Secured Cards</a></li>
-      <li><a href="#">About Us</a></li>
+      <li><a href="about.html">About Us</a></li>
     </ul>
   </nav>
 
@@ -72,6 +84,8 @@
             <label><input type="checkbox" value="Capital One"> Capital One</label>
             <label><input type="checkbox" value="Discover"> Discover</label>
             <label><input type="checkbox" value="American Express"> American Express</label>
+            <label><input type="checkbox" value="Bank of America"> Bank of America</label>
+            <label><input type="checkbox" value="Wells Fargo"> Wells Fargo</label>
           </div>
         </div>
 
@@ -192,6 +206,7 @@
 
 </body>
 </html>
+
 
 
 
