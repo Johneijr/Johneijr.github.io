@@ -1,40 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <title>Card Results</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      background: linear-gradient(to bottom, #f0f4ff, #c8d7ee);
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+    .not-actual {
+  font-size: 12px;
+  color: #888;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  text-align: center;
+  width: 100%;
+}
 
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 300px);
-      gap: 20px;
-      justify-content: center;
-      margin: 40px auto;
-    }
-    .card {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 300px;
-      color: black;
-    }
-    .card img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 12px;
-    }
+    body {
+  background: linear-gradient(to bottom, #f0f4ff, #a0bbe4);
+  background-attachment: fixed; /* keeps the gradient stable */
+  background-repeat: no-repeat; /* prevents it from repeating */
+  background-size: cover; /* stretches it nicely */
+  min-height: 100%;
+}
+
+
+    /* Responsive cards grid */
+.cards-grid {
+  display: grid;
+  /* auto-fit will create as many columns as fit.
+     minmax sets the minimum card width and lets the card grow to fill space. */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 1200px;        /* keep the grid from stretching too wide */
+  margin: 40px auto;
+  padding: 0 16px;          /* give some horizontal breathing room on small screens */
+  box-sizing: border-box;
+}
+
+/* Card — use full width of its grid cell instead of fixed px width */
+.card {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;              /* fill grid cell */
+  color: black;
+  box-sizing: border-box;
+}
+
+/* Keep images responsive */
+.card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: block;
+}
     .card h3 {
       margin: 0;
       font-size: 18px;
@@ -77,29 +101,85 @@
       color: #003DA5;
       border: 1px solid #003DA5;
     }
+
+    /* --- Card Image Overlay --- */
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.card-image-wrapper img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.not-actual-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 4px;
+  font-size: 8px;
+  color: rgba(155, 155, 155, 0.85);
+  padding: 2px 6px;
+  border-radius: 3px;
+  pointer-events: none;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+.disclaimer {
+  background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  border-top: 1px solid #ccc;
+  margin-top: 40px;
+}
+
+.disclaimer strong {
+  color: #000;
+}
+.logo a {
+  color: white;             /* same as before */
+  text-decoration: none;    /* removes underline */
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo a:hover {
+  opacity: 0.85;            /* subtle hover effect */
+}
+
   </style>
 </head>
 <body>
 
   <!-- Navigation Bar -->
   <nav class="navbar">
-    <div class="logo">Card MatchR</div>
+    <div class="logo">
+  <a href="index.html">Card MatchR</a>
+</div>
+
     <ul class="nav-links">
-      <li><a href="#">Credit Cards</a></li>
-      <li><a href="#">Student Cards</a></li>
-      <li><a href="#">Secured Cards</a></li>
-      <li><a href="#">About Us</a></li>
+      <li><a href="about.html">About Us</a></li>
     </ul>
   </nav>
 
-  <h1>Matching Cards</h1>
+
+ <h1 style="font-size: 28px; font-weight: 600;">
+  <span id="cardCount" style="color: #aaaa;">0</span>
+  <span style="color: #aaaa;">Matching Cards</span>
+</h1>
+
+
+
   <div class="cards-grid" id="results"></div>
 
 <script>
   // Dataset of cards
   const cards = [
     {
-      name: "Chase Freedom Unlimited® Credit Card",
+      name: "Chase Freedom Unlimited<sup>®</sup> Credit Card",
       type: "Credit Card",
       brand: "Chase",
       category: "Credit",
@@ -112,24 +192,8 @@
         "No Annual Fee",
         "0% Intro APR for 15 months then 18.99% to 28.49% Standard Variable Purchase APR"
       ],
-      img: "https://i.imgur.com/3Fwojxt.png",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled154_20251009150903.jpg",
       applyLink: "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited?CELL=6TKV"
-    },
-    {
-      name: "Capital One Quicksilver",
-      type: "Credit Card",
-      brand: "Capital One",
-      category: "Credit",
-      credit: ["Good","Very Good", "Excellent"],
-      fees: "No Annual Fee",
-      rewards: ["Cashback"],
-      perks: [
-        "Unlimited 1.5% cash back",
-        "$0 annual fee",
-        "No foreign transaction fees"
-      ],
-      img: "https://i.imgur.com/zPTfUQl.jpeg",
-      applyLink: "https://www.capitalone.com/credit-cards/quicksilver/"
     },
     {
       name: "Discover it<sup>®</sup> Cash Back Credit Card",
@@ -144,7 +208,7 @@
         "No annual fee",
         "Unlimited Cashback Match"
       ],
-      img: "https://i.imgur.com/vkJ0sMO.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled155_20251010135412.jpg",
       applyLink: "https://www.discover.com/credit-cards/cash-back/it-card.html"
     },
     {
@@ -160,7 +224,7 @@
         "No annual fee",
         "Unlimited Cashback Match"
       ],
-      img: "https://i.imgur.com/74d7H3o.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled47_20251009222910.jpg",
       applyLink: "https://www.discover.com/credit-cards/student-credit-card/it-card.html"
     },
     {
@@ -176,7 +240,7 @@
         "No annual fee",
         "Minimum $200 Deposit"
       ],
-      img: "https://i.imgur.com/uWDQbxN.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled46_20251009223049.jpg",
       applyLink: "https://www.discover.com/credit-cards/secured-credit-card/"
     },
     
@@ -194,7 +258,7 @@
         "2% Cashback Bonus® at Resturants & Gas Stations ",
         "1% Cash Back on Everything Else"
       ],
-      img: "https://i.imgur.com/CtH6HUa.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled50_20251009222627.jpg",
       applyLink: "https://www.discover.com/credit-cards/student-credit-card/chrome-card.html?ICMPGN=ALL_CC_STUDENT_CHROME_CARD"
     },
      {
@@ -211,7 +275,7 @@
         "Earn 1.5x Miles on every dollar of every purchase",
         "0% Intro APR for 15 months then 18.24% to 27.24% Standard Variable Purchase APR."
       ],
-      img: "https://i.imgur.com/jLRWD0Z.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled45_20251009222743.jpg",
       applyLink: "https://www.discover.com/credit-cards/travel/?ICMPGN=ALL_CC_TRAVEL_CARD"
     },
     {
@@ -228,7 +292,7 @@
         "No annual fee",
         "0% Intro APR for 15 months, then 18.24% to 27.24% Standard Variable Purchase APR."
       ],
-      img: "https://i.imgur.com/IuCOhVR.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled50_20251009222627.jpg",
       applyLink: "https://www.discover.com/credit-cards/cash-back/chrome.html?ICMPGN=ALL_CC_GAS_AND_RESTAURANT_CARD"
     },
     {
@@ -245,7 +309,7 @@
         "No annual fee",
         "0% Intro APR for 15 months, then 18.24% to 27.24% Standard Variable Purchase APR."
       ],
-      img: "https://i.imgur.com/Y0Vwsae.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled49_20251009222505.jpg",
       applyLink: "https://www.discover.com/credit-cards/cash-back/nhl-card.html?ICMPGN=ALL_CC_NHL_CARD"
     },
     {
@@ -262,7 +326,7 @@
         "$795 annual fee + $125 per authorized user",
         "20.24% – 28.74% variable APR."
       ],
-      img: "https://i.imgur.com/NiEYjtR.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled48_20251009222353.jpg",
       applyLink: "https://creditcards.chase.com/rewards-credit-cards/sapphire/reserve?CELL=6TKV"
     },
     {
@@ -279,7 +343,7 @@
         "$95 annual fee",
         "19.99% – 28.24% variable APR."
       ],
-      img: "https://i.imgur.com/9JdAIpz.jpeg",
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled51_20251010141528.jpg",
       applyLink: "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred?CELL=6TKV"
     },
     {
@@ -951,6 +1015,1050 @@
       img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled96_20250925190738.png",
       applyLink: "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-blue-american-express-card/?eep=25330&intlink=US-Axp-Shop-Consumer-VAC-DeltaBlue-Prospect-Cardname-CardTile"
     },
+    {
+      name: "Capital One Platinum Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Fair", "Good","Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Be automatically considered for a higher credit line in as little as 6 months",
+        "No Foreign Transaction Fees",
+        "29.74% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled99_20250926141733.png",
+      applyLink: "https://www.capitalone.com/credit-cards/platinum/"
+    },
+    {
+      name: "Capital One Venture X Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "Earn 75,000 bonus miles once you spend $4,000 on purchases within the first 3 months from account opening",
+        "Earn unlimited 10X miles on hotels and rental cars booked through Capital One Travel and 5X miles on flights and vacation rentals booked through Capital One Travel, plus unlimited 2X miles on all other purchases",
+        "19.99% - 29.24% variable APR",
+        "$395 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled100.png",
+      applyLink: "https://www.capitalone.com/credit-cards/venture-x/"
+    },
+     {
+      name: "Capital One Venture Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "Earn 75,000 bonus miles once you spend $4,000 on purchases within the first 3 months from account opening",
+        "Earn unlimited 2X miles per dollar on every purchase. Earn unlimited 5X miles per dollar on hotels, vacation rentals, and rental cars booked through Capital One Travel",
+        "19.99% - 29.24% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled100_20250926142424.png",
+      applyLink: "https://www.capitalone.com/credit-cards/venture/"
+    },
+    {
+      name: "Capital One VentureOne Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "Earn 20,000 bonus miles once you spend $500 on purchases within the first 3 months from account opening",
+        "Earn unlimited 1.25 miles per dollar on every purchase. Earn unlimited 5 miles per dollar on hotels, vacation rentals and rental cars booked through Capital One Travel",
+        "0% intro APR for 15 months; 19.24% - 29.24% variable APR after that",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled100_20250926142758.png",
+      applyLink: "https://www.capitalone.com/credit-cards/ventureone/"
+    },
+    {
+      name: "Capital One VentureOne Rewards for Good Credit",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "You’ll earn the usual VentureOne travel rewards, but won’t be eligible for new cardmember bonus miles or 0% intro APR",
+        "Earn unlimited 1.25 miles per dollar on every purchase, every day",
+        "29.74% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled100_20250926142758.png",
+      applyLink: "https://www.capitalone.com/credit-cards/ventureone-good-credit/"
+    },
+    {
+      name: "Capital One Quicksilver Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Earn a $200 cash bonus once you spend $500 on purchases within the first 3 months from account opening",
+        "Earn unlimited 1.5% cash back on every purchase, every day",
+        "0% intro APR for 15 months; 19.24% - 29.24% variable APR after that",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled108.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/quicksilver/"
+    },
+    {
+      name: "Capital One Quicksilver Rewards for Good Credit",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "You’ll earn the usual Quicksilver rewards, but won’t be eligible for new cardmember bonus cash or 0% intro APR",
+        "Earn unlimited 1.5% cash back on every purchase, every day",
+        "29.74% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled108.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/quicksilver-good-credit/"
+    },
+    {
+      name: "Capital One Savor Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback", "Travel"],
+      perks: [
+        
+        "Earn a $200 cash bonus once you spend $500 on purchases within the first 3 months from account opening",
+        "Earn unlimited 3% cash back at grocery stores, on dining, entertainment and popular streaming services, plus 1% cash back on all other purchases",
+        "0% intro APR for 12 months; 19.24% - 29.24% variable APR after that",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled106.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/savor/"
+    },
+    {
+      name: "Capital One Savor Rewards for Good Credit",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "You’ll earn the usual Savor grocery store, dining and entertainment rewards, but won’t be eligible for new cardmember bonus cash or 0% intro APR",
+        "Earn unlimited 3% cash back at grocery stores, on dining, entertainment and popular streaming services, plus 1% cash back on all other purchases",
+        "29.74% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled106.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/savor-good-credit/"
+    },
+    {
+      name: "Capital One SavorOne Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Fair","Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Earn unlimited cash back that won’t expire for the life of the account, plus you can redeem rewards your way",
+        "Earn unlimited 3% cash back at grocery stores, on dining, entertainment and popular streaming services, plus 1% cash back on all other purchases",
+        "29.74% variable APR",
+        "$39 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled106.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/savorone/"
+    },
+    {
+      name: "Capital One QuicksilverOne Rewards",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Fair","Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Be automatically considered for a higher credit line in as little as 6 months",
+        "Earn unlimited 1.5% cash back on every purchase, every day",
+        "29.74% variable APR",
+        "$39 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled108.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/quicksilverone/"
+    },
+    {
+      name: "Capital One Savor Rewards for Students",
+      type: "Student Card",
+      brand: "Capital One",
+      category: "Student",
+      credit: ["Fair","Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Earn a one-time $50 cash bonus once you spend $100 on purchases within 3 months from account opening ",
+        "Earn unlimited 3% cash back at grocery stores, on dining, entertainment and popular streaming services, plus 1% cash back on all other purchases",
+        "19.24% - 29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled106.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/savor-student/"
+    },
+    {
+      name: "Capital One Quicksilver Rewards for Students",
+      type: "Student Card",
+      brand: "Capital One",
+      category: "Student",
+      credit: ["Fair","Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Earn a one-time $50 cash bonus once you spend $100 on purchases within 3 months from account opening",
+        "Earn unlimited 1.5% cash back on every purchase, every day",
+        "19.24% - 29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled108.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/quicksilver-student/"
+    },
+    {
+      name: "Capital One Quicksilver Secured Rewards",
+      type: "Secured Card",
+      brand: "Capital One",
+      category: "Secured",
+      credit: ["Fair","Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Be automatically considered for a higher credit line in as little as 6 months",
+        "Earn 1.5% cash back on every purchase with a refundable $200 minimum deposit",
+        "29.74% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled108.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/quicksilver-secured/"
+    },
+    {
+      name: "Capital One Platinum Secured",
+      type: "Secured Card",
+      brand: "Capital One",
+      category: "Secured",
+      credit: ["No Credit", "Poor", "Fair","Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Take control and build your credit with responsible use",
+        "Refundable deposit of $49, $99 or $200 gets you at least a $200 initial credit line. With responsible use, you can earn your deposit back and upgrade your card",
+        "29.74% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled99_20250926141733.png",
+      applyLink: "https://www.capitalone.com/credit-cards/platinum-secured/"
+    },
+    {
+      name: "Capital One Kohl's Rewards<sup>®</sup> Visa",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Save 40% today, plus earn 7.5% in rewards at Kohl's every day when you open a Kohl's Card",
+        "Earn Kohl’s Rewards everywhere Visa is accepted and enjoy exclusive cardholder discounts and a special anniversary offer every year",
+        "30.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled107_20250928191945.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/kohls/"
+    },
+    {
+      name: "Capital One REI Co-op<sup>®</sup> Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Cashback"],
+      perks: [
+        
+        "Earn a $100 REI gift card after your first purchase outside of REI within 60 days of account opening. Only co-op members can apply",
+        "Earn 5% back in rewards on REI purchases, plus 1.5% back on all other purchases. Redeem rewards on purchases at REI retail stores and REI.com",
+        "18.24% - 29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled115_20250928192207.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/rei/"
+    },
+    {
+      name: "Capital One Pottery Barn Key Rewards Visa",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Cashback"],
+      perks: [
+        
+        "10% back in rewards across eight of Williams-Sonoma, Inc.’s brands for your first 30 days from account opening",
+        "Earn 5% back in rewards across eight of Williams-Sonoma, Inc.’s brands, including Pottery Barn, Williams Sonoma, and West Elm. Earn 4% back on grocery stores, dining & food delivery. Earn 1% back in rewards on everything else",
+        "29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled116_20250928192400.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/potterybarn/"
+    },
+    {
+      name: "Capital One Williams Sonoma Key Rewards Visa",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Cashback"],
+      perks: [
+        
+        "10% back in rewards across eight of Williams-Sonoma, Inc.’s brands for your first 30 days from account opening",
+        "Earn 5% back in rewards across eight of Williams-Sonoma, Inc.’s brands, including Pottery Barn, Williams Sonoma, and West Elm. Earn 4% back on grocery stores, dining & food delivery. Earn 1% back in rewards on everything else",
+        "29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled116_20250928192400.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/williams-sonoma/"
+    },
+    {
+      name: "Capital One West Elm Key Rewards Visa",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Cashback"],
+      perks: [
+        
+        "10% back in rewards across eight of Williams-Sonoma, Inc.’s brands for your first 30 days from account opening",
+        "Earn 5% back in rewards across eight of Williams-Sonoma, Inc.’s brands, including Pottery Barn, Williams Sonoma, and West Elm. Earn 4% back on grocery stores, dining & food delivery. Earn 1% back in rewards on everything else",
+        "29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled116_20250928192400.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/westelm/"
+    },
+    {
+      name: "Capital One The Key Rewards Visa",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Cashback"],
+      perks: [
+        
+        "10% back in rewards across eight of Williams-Sonoma, Inc.’s brands for your first 30 days from account opening",
+        "Earn 5% back in rewards across eight of Williams-Sonoma, Inc.’s brands, including Pottery Barn, Williams Sonoma, and West Elm. Earn 4% back on grocery stores, dining & food delivery. Earn 1% back in rewards on everything else",
+        "29.24% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled116_20250928192400.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/thekeyrewards/"
+    },
+    {
+      name: "Capital One Cabela’s CLUB Card",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Points"],
+      perks: [
+        
+        "Get 2% back in CLUB Points on all Bass Pro Shops and Cabela’s purchases",
+        "Get 1% back in CLUB Points on other purchases, anywhere Mastercard is accepted",
+        "9.99% APR on Bass Pro Shops and Cabela’s and purchases; 19.99% - 31.24% variable APR on all other purchases",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled117_20250928192631.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/cabelas/"
+    },
+    {
+      name: "Capital One Bass Pro Shops CLUB Card",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other", "Points"],
+      perks: [
+        
+        "Get 2% back in CLUB Points on all Bass Pro Shops and Cabela’s purchases",
+        "Get 1% back in CLUB Points on other purchases, anywhere Mastercard is accepted",
+        "9.99% APR on Bass Pro Shops and Cabela’s and purchases; 19.99% - 31.24% variable APR on all other purchases",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled117_20250928192631.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/bass-pro-shops/"
+    },
+    {
+      name: "Capital One BJ’s One<sup>™</sup> Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Only BJ's Wholesale Club members can apply. Based on your BJ's membership, you will be directed to the appropriate credit card",
+        "Earn 3% back in rewards on most purchases at BJ’s. 1.5% back in rewards on purchases everywhere else Mastercard<sup>®</sup> is accepted. 10¢ off/gallon at BJ’s Gas<sup>®</sup>. Your rewards never expire. Redeem your rewards in-club, on BJs.com or in the BJ’s app",
+        "19.24% or 29.24% APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled118_20250928192844.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/bjs-wholesale-club/"
+    },
+    {
+      name: "Capital One BJ’s One+<sup>™</sup> Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Capital One",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Only BJ's Wholesale Club members can apply. Based on your BJ's membership, you will be directed to the appropriate credit card",
+        "Earn 5% back in rewards on most purchases at BJ’s. 2% back in rewards on purchases everywhere else Mastercard<sup>®</sup> is accepted. 15¢ off/gallon at BJ’s Gas<sup>®</sup>. Your rewards never expire. Redeem your rewards in-club, on BJs.com or in the BJ’s app",
+        "19.24% or 29.24% APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled119.jpg",
+      applyLink: "https://www.capitalone.com/credit-cards/bjs-wholesale-club/"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Customized Cash Rewards",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "New Offer: 6% cash back in the category of your choice – for the first year. Plus, a $200 online cash rewards bonus offer",
+        "3% cash back + 3% first-year cash back bonus in the category of your choice, automatic 2% cash back at grocery stores and wholesale clubs and unlimited 1% cash back on all other purchases",
+        "0% Intro APR for 15 months on purchases, then 17.99%–27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled120_20251001233450.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/cash-back-credit-card/?campaign=4076366~P5~en_US"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Unlimited Cash Rewards",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "New offer: Unlimited 2% cash back on purchases for the first year. Plus, a $200 online cash rewards bonus offer",
+        "Earn unlimited 2% cash back on purchases for the first year from account opening. Thereafter, you'll earn unlimited 1.5% cash back on all purchases",
+        "0% Intro APR for 15 billing cycles, then 17.99%–27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled121_20251001233804.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/unlimited-cash-back-credit-card/?campaign=4076441~HB~en_US"
+    },
+    {
+      name: "BankAmericard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Save money on interest",
+        "No Penalty APR. Paying late won't automatically raise your interest rate (APR). Other account pricing and terms apply",
+        "0% Intro APR for 18 billing cycles, then 14.99%–24.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled122_20251001234142.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/bankamericard-credit-card/?campaign=4076558~NT~en_US"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Travel Rewards",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "25,000 online bonus points offer – a $250 value",
+        "Earn unlimited 1.5 points for every $1 you spend on all purchases everywhere, every time and no expiration on points as long as your account remains open",
+        "0% Intro APR for 15 billing cycles, then 17.99%–27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled123_20251001234501.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/travel-rewards-credit-card/?campaign=4076499~T9~en_US"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Premium Rewards<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "60,000 online bonus points offer — a $600 value",
+        "Earn unlimited points, that don't expire as long as the account remains open – 2 points for every $1 spent on travel and dining purchases and 1.5 points per $1 on all other purchases",
+        "19.99% to 27.99% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled124_20251001234752.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/premium-rewards-credit-card/?campaign=4076573~47~en_US"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Premium Rewards<sup>®</sup>  Elite",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "75,000 online bonus points offer — a $750 value",
+        "Earn unlimited 2 points for every $1 spent on travel and dining purchases, and unlimited 1.5 points for every $1 spent on all other purchases. No limit to the points you can earn and points don't expire as long as the account remains open",
+        "19.99% to 27.99% variable APR",
+        "$550 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled125_20251001235004.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/premium-rewards-elite-credit-card/?campaign=4076454~6A~en_US"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Customized Cash Rewards for Students",
+      type: "Student Card",
+      brand: "Bank of America",
+      category: "Student",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "New Offer: 6% cash back in the category of your choice – for the first year. Plus, a $200 online cash rewards bonus offer",
+        "3% cash back + 3% first-year cash back bonus in the category of your choice, automatic 2% cash back at grocery stores and wholesale clubs and unlimited 1% cash back on all other purchases",
+        "0% Intro APR for 15 months on purchases, then 17.99%–27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled120_20251001233450.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/student-cash-back-credit-card/"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Unlimited Cash Rewards for Students",
+      type: "Student Card",
+      brand: "Bank of America",
+      category: "Student",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "New offer: Start building your financial future while earning unlimited 2% cash back on purchases for the first year",
+        "Earn unlimited 2% cash back on purchases for the first year from account opening, with no limit to the amount of cash back you can earn. Thereafter, you'll earn unlimited 1.5% cash back on all purchases, with no expiration on rewards as long as your account remains open",
+        "0% Intro APR for 15 billing cycles, then 17.99%–27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled121_20251001233804.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/unlimited-cash-back-student-credit-card/"
+    },
+    {
+      name: "BankAmericard<sup>®</sup> for Students",
+      type: "Student Card",
+      brand: "Bank of America",
+      category: "Student",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Save on interest, a great choice when you’re just starting out",
+        "3% Intro balance transfer fee for the first 60 days your account is open. After the intro balance transfer fee offer ends, the fee for all future balance transfers is 4%. Balance transfers may not be used to pay any account provided by Bank of America",
+        "0% Intro APR for 18 billing cycles, then 14.99%–24.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled122_20251001234142.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/low-interest-student-credit-card/?campaign=4076562~9Y~en_US"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Travel Rewards for Students",
+      type: "Student Card",
+      brand: "Bank of America",
+      category: "Student",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "25,000 online bonus points after making at least $1,000 in purchases in the first 90 days of your account opening",
+        "Earn unlimited 1.5 points for every $1 you spend on all purchases everywhere, every time and no expiration on points as long as your account remains open",
+        "0% Intro APR for 15 billing cycles, then 17.99%–27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled123_20251001234501.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/student-rewards-credit-card/"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Customized Cash Rewards Secured",
+      type: "Secured Card",
+      brand: "Bank of America",
+      category: "Secured",
+      credit: ["No Credit", "Poor", "Fair", "Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Help build your credit while earning 6% cash back in the category of your choice – for the first year",
+        "3% cash back + 3% first-year cash back bonus in the category of your choice, automatic 2% cash back at grocery stores and wholesale clubs and unlimited 1% cash back on all other purchases",
+        "27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled120_20251001233450.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/cash-back-secured-credit-card/"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Unlimited Cash Rewards Secured",
+      type: "Secured Card",
+      brand: "Bank of America",
+      category: "Secured",
+      credit: ["No Credit", "Poor", "Fair", "Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Help strengthen or build your credit while earning unlimited 2% cash back on purchases for the first year",
+        "Earn unlimited 2% cash back on purchases for the first year from account opening, with no limit to the amount of cash back you can earn. Thereafter, you'll earn unlimited 1.5% cash back on all purchases, with no expiration on rewards as long as your account remains open",
+        "27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled121_20251001233804.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/unlimited-cash-back-secured-credit-card/"
+    },
+    {
+      name: "BankAmericard<sup>®</sup> Secured",
+      type: "Secured Card",
+      brand: "Bank of America",
+      category: "Secured",
+      credit: ["No Credit", "Poor", "Fair", "Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Help establish, strengthen - or even rebuild your credit with a card that's simple and convenient",
+        "Build up your credit history – use this card responsibly and over time it could help you improve your credit score",
+        "24.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled122_20251001234142.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/secured-credit-card/"
+    },
+    {
+      name: "Bank of America<sup>®</sup> Travel Rewards Secured",
+      type: "Secured Card",
+      brand: "Bank of America",
+      category: "Secured",
+      credit: ["No Credit", "Poor", "Fair", "Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Help strengthen or build your credit and earn unlimited points",
+        "Earn unlimited 1.5 points for every $1 you spend on all purchases everywhere, every time and no expiration on points as long as your account remains open",
+        "27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled123_20251001234501.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/travel-rewards-secured-credit-card/"
+    },
+    {
+      name: "Atmos<sup>™</sup> Rewards Ascent Visa Signature<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 80,000 bonus points and a $99 Companion Fare (plus taxes and fees from $23) with this offer. To qualify, make $4,000 or more in purchases within the first 120 days of opening your account",
+        "Free checked bag for you and up to 6 guests on the same reservation, along with preferred boarding when you pay for your flight with your card",
+        "19.99%-27.99% variable APR",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled126_20251001235325.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/alaska-airlines-credit-card/"
+    },
+    {
+      name: "Atmos<sup>™</sup> Rewards Summit Visa Infinite<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Limited Time Online Offer: 100,000 bonus points plus a Global 25K Companion Award worth up to 25,000 points",
+        "Earn unlimited 3 points for every $1 spent on eligible Alaska Airlines, Hawaiian Airlines, dining and foreign purchases and unlimited 1 point for every $1 spent on all other purchases. Plus, earn a 10% rewards bonus on all points earned from card purchases if you have an eligible Bank of America<sup>®</sup> account",
+        "19.99%-27.99% variable APR",
+        "$395 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled127_20251001235604.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/alaska-airlines-infinite-credit-card/"
+    },
+    {
+      name: "Susan G. Komen<sup>®</sup> Customized Cash Rewards credit card",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "New Offer: Help fight breast cancer with 6% cash back in the category of your choice – for the first year. Plus, a $200 online cash rewards bonus offer",
+        "3% cash back + 3% first-year cash back bonus in the category of your choice, automatic 2% cash back at grocery stores and wholesale clubs and unlimited 1% cash back on all other purchases",
+        "17.99%-27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled128_20251001235900.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/susan-komen-credit-card/"
+    },
+    {
+      name: "Free Spirit<sup>®</sup> Travel More World Elite Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Online Offer: 50,000 Bonus Points + a $100 Companion Flight Voucher",
+        "Earn 3 points per $1 spent on eligible Spirit purchases, 2 points per $1 spent on eligible dining and grocery store purchases and 1 point per $1 spent on all other purchases",
+        "19.99%-27.99% variable APR",
+        "$79 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled103_20251002000058.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/spirit-airlines-credit-card/"
+    },
+    {
+      name: "Allways Rewards Visa<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Online Offer: Earn 30,000 Bonus Points – equal to $300 off a future Allegiant trip when you redeem points, after you make $1,500 or more in purchases within the first 90 days of account opening",
+        "3 points per $1 spent on Allegiant purchases, 2 points per $1 spent on qualifying dining purchases and 1 point per $1 spent on all other purchases",
+        "19.99%-27.99% variable APR",
+        "$59 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled129_20251002000317.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/allegiant-credit-card/"
+    },
+    {
+      name: "Air France KLM World Elite Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Miles", "Travel"],
+      perks: [
+        
+        "Online Offer: 50,000 Bonus Miles after you make $2,000 or more in purchases within the first 90 days of your account opening",
+        "3 Miles per $1 spent directly on Air France, KLM Royal Dutch Airlines and SkyTeam member airlines purchases",
+        "19.99%-27.99% variable APR",
+        "$89 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled130_20251002000538.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/air-france-credit-card/?campaign=4076236~D7~en_US"
+    },
+    {
+      name: "Royal Caribbean Visa Signature<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Get 30,000 MyCruise<sup>®</sup> bonus points after making at least $1,000 in purchases in the first 90 days of your account opening, worth $300 in onboard credit",
+        "Earn 2 MyCruise points for every $1 spent on qualifying purchases with Royal Caribbean<sup>®</sup> and our sister brands, Celebrity Cruises<sup>®</sup> and Silversea<sup>®</sup>",
+        "17.99%-27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled131_20251002000747.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/royal-caribbean-credit-card/"
+    },
+    {
+      name: "Norwegian Cruise Line<sup>®</sup> World Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Online Offer: 20,000 bonus points after you make $1,000 or more in purchases in the first 90 days of account opening. That's enough for a $200 onboard credit or $200 off your next Norwegian cruise",
+        "Earn 3 WorldPoints<sup>®</sup> points per $1 spent on Norwegian purchases, 2 WorldPoints points per $1 spent on eligible air and hotel purchases and 1 WorldPoints point per $1 spent on all other purchases",
+        "17.99%-27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled132_20251002000944.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/norwegian-cruise-lines-credit-card/"
+    },
+    {
+      name: "Celebrity Cruises Visa Signature<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Bank of America",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Get 30,000 MyCruise<sup>®</sup> bonus points after making at least $1,000 in purchases in the first 90 days of your account opening, worth $300 in onboard credit",
+        "Earn 2 MyCruise<sup>®</sup> points for every $1 spent on qualifying purchases with Celebrity Cruises<sup>®</sup> and our sister brands, Royal Caribbean<sup>®</sup> and Silversea<sup>®</sup>",
+        "17.99%-27.99% variable APR",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled133_20251002001117.jpg",
+      applyLink: "https://www.bankofamerica.com/credit-cards/products/celebrity-cruises-credit-card/"
+    },
+    {
+      name: "Wells Fargo Active Cash<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Fair", "Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "$200 cash rewards bonus when you spend $500 in purchases in the first 3 months",
+        "Unlimited 2% cash rewards on purchases",
+        "0% intro APR for 12 months from account opening, then 18.99%, 23.99% or 28.99% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled134_20251004105151.png",
+      applyLink: "https://creditcards.wellsfargo.com/active-cash-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=0126D7I6F40000&product_code=CC&subproduct_code=AC&cx_nm=RVAA00001_CSMPD_MC_RV"
+    },
+    {
+      name: "Wells Fargo Autograph Journey<sup>℠</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 60,000 bonus points when you spend $4,000 in purchases within the first 3 months",
+        "5X points with hotels, 4X points with airlines, 3X points on other travel and restaurants, and 1X points on other purchases",
+        "19.99%, 24.99%, or 28.99% variable APR ",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled135_20251004105406.png",
+      applyLink: "https://creditcards.wellsfargo.com/autograph-journey-visa-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=0127E1I0P10000&product_code=CC&subproduct_code=MT&cx_nm=RVAA00001_CSMPD_MC_RV"
+    },
+    {
+      name: "Wells Fargo Autograph<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 20,000 bonus points when you spend $1,000 in purchases within the first 3 months",
+        "Unlimited 3X points on restaurants, travel, gas stations, transit, popular streaming services, and phone plans. 1X points on other purchases",
+        "0% intro APR for 12 months from account opening, then 18.99%, 23.99% or 28.99% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled136_20251004105710.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/autograph-visa-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=012988I6P10000&product_code=CC&subproduct_code=AU&cx_nm=RVAA00001_CSMPD_MC_RV"
+    },
+    {
+      name: "Wells Fargo Reflect<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Fair", "Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Other"],
+      perks: [
+        
+        "Up to $600 of cell phone protection against damage or theft. Subject to a $25 deductible",
+        "Through My Wells Fargo Deals, you can have access to personalized deals from a variety of merchants",
+        "0% intro APR for 21 months from account opening, then 16.99%, 23.49% or 28.74% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled137_20251004110218.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/reflect-visa-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=013000IGF80000&product_code=CC&subproduct_code=VV&cx_nm=RVAA00001_CSMPD_MC_RV"
+    },
+    {
+      name: "Wells Fargo Attune<sup>®</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback"],
+      perks: [
+        
+        "Earn a $100 cash rewards bonus when you spend $500 in purchases in the first 3 months",
+        "Unlimited 4% cash rewards on gym memberships, salons, spas, select sports, recreation, and entertainment, public transit, electric vehicle charging, and select thrift stores. 1% cash rewards on other purchases",
+        "0% intro APR for 12 months from account opening, then 18.99%, 23.99%, or 28.99% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled138_20251004110621.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/attune-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=012286I6P10000&product_code=CC&subproduct_code=EM&cx_nm=RVAA00001_CSMPD_MC_RV"
+    },
+    {
+      name: "Wells Fargo Bilt Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "1X points on rent payments without the transaction fee, up to 100,000 points each calendar year",
+        "2X points on travel, 3X points on dining, and 1X points on other purchases",
+        "20.24%, 23.24%, or 28.24% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled139_20251004110833.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/bilt-rewards-credit-card/?sub_channel=WEB&vendor_code=WF&product_code=CC&subproduct_code=EC&cx_nm=RVAA00001_CSMPD_MC"
+    },
+    {
+      name: "Wells Fargo One Key<sup>™</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Cashback", "Travel"],
+      perks: [
+        
+        "Earn $400 in OneKeyCash<sup>™</sup> after you spend $1,000 on purchases in the first 3 months",
+        "3% in OneKeyCash on Expedia, Hotels.com and Vrbo, 3% at gas stations, grocery stores and on dining, and 1.5% on other purchases",
+        "18.99%, 23.99%, or 28.99% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled140_20251004111019.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/one-key-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=21231AIXP10000&product_code=CC&subproduct_code=OW&cx_nm=RVAA00001_CSMPD_MC"
+    },
+    {
+      name: "Wells Fargo One Key+<sup>™</sup> Card",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Cashback", "Travel"],
+      perks: [
+        
+        "Earn $600 in OneKeyCash<sup>™</sup> after you spend $3,000 on purchases in the first 3 months",
+        "3% in OneKeyCash on Expedia, Hotels.com and Vrbo, 3% at gas stations, grocery stores and on dining, and 2% on other purchases",
+        "18.99%, 23.99%, or 28.99% variable APR ",
+        "$99 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled141_20251004111212.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/one-key-plus-credit-card/?sub_channel=WEB&vendor_code=WF&FPID=21271DIXP10000&product_code=CC&subproduct_code=OF&cx_nm=RVAA00001_CSMPD_MC"
+    },
+    {
+      name: "Wells Fargo Choice Privileges<sup>®</sup> Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "No Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 40,000 bonus points when you spend $1,000 in purchases in the first 3 months",
+        "5X points on stays at participating Choice Hotels<sup>®</sup> properties plus on Choice Privileges point purchases. 3X points on purchases at gas stations, grocery stores, home improvement stores and phone plan services. And 1X points on other purchases",
+        "19.74%, 23.99%, or 28.99% variable APR ",
+        "$0 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled142_20251004111517.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/choice-hotel-privileges-mastercard/?sub_channel=WEB&vendor_code=WF&FPID=0124CAIXP10000&product_code=CC&subproduct_code=CP&cx_nm=RVAA00001_CSMPD_MC"
+    },
+    {
+      name: "Wells Fargo Choice Privileges<sup>®</sup> Select Mastercard<sup>®</sup>",
+      type: "Credit Card",
+      brand: "Wells Fargo",
+      category: "Credit",
+      credit: ["Good", "Very Good","Excellent"],
+      fees: "Annual Fee",
+      rewards: ["Points", "Travel"],
+      perks: [
+        
+        "Earn 60,000 bonus points when you spend $3,000 in purchases in the first 3 months",
+        "10X points on stays at participating Choice Hotels<sup>®</sup> properties plus on Choice Privileges point purchases. 5X points on purchases at gas stations, grocery stores, home improvement stores and phone plan services. And 1X points on other purchases",
+        "19.74%, 23.99%, or 28.99% variable APR ",
+        "$95 annual fee"
+      ],
+      img: "https://raw.githubusercontent.com/Johneijr/Card-Images/refs/heads/main/Untitled143_20251004111742.jpg",
+      applyLink: "https://creditcards.wellsfargo.com/choice-hotels-privileges-select-mastercard/?sub_channel=WEB&vendor_code=WF&FPID=0123CBIXP10000&product_code=CC&subproduct_code=CE&cx_nm=RVAA00001_CSMPD_MC"
+    },
   ];
 
   // Get filters from URL
@@ -978,29 +2086,48 @@
   });
 
   // Render results
-  const resultsDiv = document.getElementById("results");
-  if (results.length > 0) {
-    results.forEach(card => {
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `
+const resultsDiv = document.getElementById("results");
+if (results.length > 0) {
+  results.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <div class="card-image-wrapper">
         <img src="${card.img}" alt="${card.name}">
-        <h3>${card.name}</h3>
-        <div class="type">${card.type}</div>
-        <ul>${card.perks.map(p => `<li>${p}</li>`).join("")}</ul>
-        <div class="actions">
-          <a href="${card.applyLink}" target="_blank" class="btn btn-primary">View Details</a>
-        </div>
-      `;
-      resultsDiv.appendChild(div);
-    });
-  } else {
-    resultsDiv.innerHTML = "<p>No cards match your filters.</p>";
-  }
-</script>
+        <span class="not-actual-overlay">Not Actual Card Design</span>
+      </div>
+      <h3>${card.name}</h3>
+      <p class="type">${card.type}</p>
+      <ul>${card.perks.map(p => `<li>${p}</li>`).join("")}</ul>
+      <div class="actions">
+        <a href="${card.applyLink}" target="_blank" class="btn btn-primary">Apply Now</a>
+      </div>
+    `;
+    resultsDiv.appendChild(div);
+  });
 
+  // 👇 Add this line right here:
+  document.getElementById("cardCount").textContent = results.length;
+
+} else {
+  resultsDiv.innerHTML = "<p>No cards match your filters.</p>";
+  // Show (0) if no matches
+  document.getElementById("cardCount").textContent = 0;
+}
+
+</script>
+<footer class="disclaimer">
+  <p>
+<strong>Disclaimer:</strong> The credit, secured, and student card information provided on this site is for general informational purposes only. 
+    While we strive to keep all details accurate and up to date, offers, terms, and availability may change without notice. 
+    Always verify the most current information directly with the card issuer before applying or making any financial decisions. 
+    Images shown are for illustrative purposes only and do not represent the actual card design.
+
+</p>
+</footer>
 </body>
 </html>
+
 
 
 
